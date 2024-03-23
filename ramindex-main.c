@@ -34,7 +34,6 @@
 #include "ramindex-ops.h"
 #include "ramindex-cortex-a72.h"
 #include "ramindex-cortex-a720.h"
-#include "ramindex-tests.h"
 
 #define ramindex_dbg_at1(args...) do { if (ramindex_debug_level >= 1) pr_info(args); } while (0)
 #define ramindex_dbg_at2(args...) do { if (ramindex_debug_level >= 2) pr_info(args); } while (0)
@@ -308,9 +307,6 @@ static int __init ramindex_init(void)
 		break;
 	case 0x410fd811:
 		ramindex_device.ops = &ramindex_cortex_a720_ops;
-		break;
-	case 0x12345678:
-		ramindex_device.ops = &ramindex_tests_ops;
 		break;
 	default:
 		status = -EOPNOTSUPP;

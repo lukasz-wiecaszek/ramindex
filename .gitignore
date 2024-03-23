@@ -1,0 +1,12 @@
+*.cmd
+Module.symvers
+modules.order
+ramindex.o
+ramindex.ko
+ramindex.mod
+ramindex.mod.o
+ramindex.mod.c
+
+# VSCODE
+.vscode/*
+

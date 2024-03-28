@@ -92,7 +92,7 @@ static int ramindex_cortex_a72_dump_l1i_cacheline(__s32 set, __s32 way, __u32 ls
 	* [3] Upper or lower doubleword within the quadword
 	* [2:0] Reserved
 	*/
-	for (ls = 0; ls < linesize; ls+=sizeof(*linedata)*2, linedata+=2) {
+	for (ls = 0; !ret && ls < linesize; ls+=sizeof(*linedata)*2, linedata+=2) {
 		selector = 0x01000000; /* this selects l1 instruction cache data (ramid = 0x01) */
 		selector |= (way & 0x3) << 18;
 		selector |= (set & 0xff) << 6;
@@ -190,7 +190,7 @@ static int ramindex_cortex_a72_dump_l1d_cacheline(__s32 set, __s32 way, __u32 ls
 	* [3] Upper or lower doubleword within the quadword
 	* [2:0] Reserved
 	*/
-	for (ls = 0; ls < linesize; ls+=sizeof(*linedata)*2, linedata+=2) {
+	for (ls = 0; !ret && ls < linesize; ls+=sizeof(*linedata)*2, linedata+=2) {
 		selector = 0x09000000; /* this selects l1 data cache data (ramid = 0x09) */
 		selector |= (way & 0x1) << 18;
 		selector |= (set & 0xff) << 6;

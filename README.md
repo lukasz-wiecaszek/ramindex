@@ -69,7 +69,7 @@ If your system lacks "sudo", do:
 
 ### debug
 You may specify verbosity of debug messages emmited by ramindex module.
-Default value is 0, which means that no debug messaged will be printed.
+Default value is 0, which means that no debug messages will be printed.
 Max value is 4, enabling highest verbosity level. Thus typing
 
     $ sudo modprobe ramindex debug=4
@@ -83,9 +83,9 @@ will use the default level (none of the debug messages will be emited).
 ## TESTS
 Cortex A72 is present on Raspberry Pi 4 boards.
 Thus we may perform some tests using that popular platform.
-You may for example grab some memory content using `\dev\mem` device file.
-Because kernel code occupies addresses from 0x00210000 till 0x0136ffff
-and kernel data from 0x01840000 till 0x01b7ffff,
+You may for example grab some system memory content using `\dev\mem` device file.
+In my configuration kernel code occupies addresses from 0x00210000 till 0x0136ffff
+and kernel data from 0x01840000 till 0x01b7ffff.
 
 ```
 $ sudo cat /proc/iomem
@@ -97,13 +97,17 @@ $ sudo cat /proc/iomem
   01840000-01b7ffff : Kernel data
 ```
 
-I dump such amount so that those two areas (kernel code and kernel data) are covered.
-I do it by using `dd`.
+Therefore I dump such amount so that those two areas (kernel code and kernel data) are covered.
+I do so by using `dd`.
 
     $ sudo dd if=/dev/mem of=mem.dump bs=64K count=440
 
-Then I use `ramindex` utility, to dump all the instruction cache.
-Let's see some output from 'ramindex', and check whether it corresponds to actual memory content.
+Then I use `ramindex` utility, to grab the whole content of the L1 instruction cache.
+
+    $ sudo ramindex -l1 -t1
+
+Now I have to compare output from `dd` and from `ramindex -l1 -t1`.
+The listing below presents several L1 instruction cache lines as output by `ramindex` utility.
 
 ```
 SET:0000 WAY:00 V:1 D:0 NS:1 TAG:000000f00000 DATA[0:63] 61feff34 49010094 f1ffff17 1f2003d5 08277412 e5ffffff e9031eaa 1f2003d5 3f2303d5 fd7bbea9 fd030091 f30b00f9 33423bd5 df4303d5 024138d5 410840b9
@@ -143,8 +147,8 @@ So let's check address 0x0032c0c0.
 0032c0f0  f5 13 00 f9 f5 03 01 aa  a4 4f 2f 94 83 22 40 f9  |.........O/.."@.|
 ```
 
-They match again. I think that way I verified that `ramindex` module and `ramindex`
-utility work as desired. The correctness for other level and types of caches
-I was verifying using exactly the same method.
+They match again. That is how I was verifying/testing that the
+`ramindex` kernel module and `ramindex` userspace utility work as desired.
+Other level and types of caches was tested using exactly the same method.
 
 ### TODO
